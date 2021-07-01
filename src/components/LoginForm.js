@@ -2,12 +2,29 @@ import React,{useState} from 'react'
 import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
 import { InteractionManager, Input,Button,Divider,Icon } from 'react-native-elements'
 import {useNavigation} from '@react-navigation/native'
+import {validateEmail} from '../utils/Utils'
+import { isEmpty } from 'lodash' //devuelve boolean si el valor esta vacio 
+import { validarsesion } from '../utils/Acciones'
 
 
-export default function LoginForm() {
+
+export default function LoginForm(props) {
+
+    const { toastRef } =props
     const [email, setemail] = useState("")
     const [password, setpassword] = useState("")
-    
+
+    validarsesion();
+
+    const iniciarsesion = ()=>{
+
+        if( isEmpty(email) || isEmpty(password)){
+
+            toastRef.current.show("Ingresa email y password")
+        }else if(!validateEmail(email)){
+            toastRef.current.show("ingrese un correo valido")
+        }
+    }
 
     return (
         <View style={styles.container}>
@@ -23,7 +40,7 @@ export default function LoginForm() {
             containerStyle={styles.input}
             rightIcon={{
                 type:"material-community",
-                name:"eye-outline",
+                name:"at",
                 color:"#128c7e",
                 onPress : () => alert("Hola")
             }}
@@ -64,8 +81,9 @@ export default function LoginForm() {
 
 
             <Button title="Entrar"
-            containerStyle={styles.btnentrar}
+            containerStyle={styles.btnentrar} //estilo que se aplica  afuera
             buttonStyle={{backgroundColor:"#25d366"}} //estilo que se aplica adentro de
+            onPress={()=> iniciarsesion()}
             />
             <Text style={styles.txtcrearcuenta}>
                 ¿No tienes cuenta? 
@@ -136,7 +154,7 @@ const styles = StyleSheet.create({
     },
     cuenta: {
         color: "#128c7e",
-        fontFamily: "Roboto",
+        fontFamily: "roboto",
         fontSize: 15,
     },
     txto: {
