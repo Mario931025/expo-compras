@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native'
 import {validateEmail} from '../utils/Utils'
 import { isEmpty } from 'lodash' //devuelve boolean si el valor esta vacio 
 import { validarsesion } from '../utils/Acciones'
+import Loading from './Loading'; //componente que se encarga de traer el cargador de procesos
 import * as firebase from 'firebase';
 
 export default function LoginForm(props) {
@@ -17,6 +18,7 @@ export default function LoginForm(props) {
     const navigation = useNavigation();
     //para ver contraseñas
     const [show, setshow] = useState(false)
+    const [loading, setloading] = useState(false)
 
 
     validarsesion();
@@ -29,13 +31,15 @@ export default function LoginForm(props) {
         }else if(!validateEmail(email)){
             toastRef.current.show("ingrese un correo valido")
         }else{ ////validacion de firebase con usuario y contraseña 
+            setloading(true)
             firebase.auth().signInWithEmailAndPassword(email,password)
             .then(()=> {
-                console.log("Todo bien"); 
+                setloading(false)
+                toastRef.current.show("Has iniciado sesiòn correctamente")
             })
 
             .catch((err)=>{
-                console.log(err)
+                setloading(false)
                 toastRef.current.show("email o contraseña incorrectos");
             })
         }
@@ -141,6 +145,7 @@ export default function LoginForm(props) {
                     />
                 </TouchableOpacity>
             </View>
+         <Loading isVisible = {loading} text="cargando"/>
 
         </View>
     )
