@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
         alignSelf: "center" //se alinia la imagen asi misma al centro 
     },
     textobanner:{
-        fontFamily:"roboto",
+        fontFamily:"Roboto",
         fontWeight: "bold",
         fontSize : 30,
         color: "#fff",

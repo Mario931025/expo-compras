@@ -5,13 +5,19 @@ import {useNavigation} from '@react-navigation/native'
 import {validateEmail} from '../utils/Utils'
 import { isEmpty } from 'lodash' //devuelve boolean si el valor esta vacio 
 import { validarsesion } from '../utils/Acciones'
-
+import * as firebase from 'firebase';
 
 export default function LoginForm(props) {
 
     const { toastRef } =props
     const [email, setemail] = useState("")
     const [password, setpassword] = useState("")
+
+    ////navegacion
+    const navigation = useNavigation();
+    //para ver contraseñas
+    const [show, setshow] = useState(false)
+
 
     validarsesion();
 
@@ -22,6 +28,16 @@ export default function LoginForm(props) {
             toastRef.current.show("Ingresa email y password")
         }else if(!validateEmail(email)){
             toastRef.current.show("ingrese un correo valido")
+        }else{ ////validacion de firebase con usuario y contraseña 
+            firebase.auth().signInWithEmailAndPassword(email,password)
+            .then(()=> {
+                console.log("Todo bien"); 
+            })
+
+            .catch((err)=>{
+                console.log(err)
+                toastRef.current.show("email o contraseña incorrectos");
+            })
         }
     }
 
@@ -60,9 +76,9 @@ export default function LoginForm(props) {
             containerStyle={styles.input}
             rightIcon={{
                 type:"material-community",
-                name:"eye-outline",
+                name:show ? "eye-off-outline" : "eye-outline" ,
                 color:"#128c7e",
-                onPress : () => alert("Hola")
+                onPress : () => setshow(!show)
             }}
 
             leftIcon={{
@@ -74,7 +90,7 @@ export default function LoginForm(props) {
             onChangeText={(text) => {
                 setpassword(text);
               }}
-              secureTextEntry={true}
+              secureTextEntry={!show}
               value={password}
             />
 
@@ -86,7 +102,10 @@ export default function LoginForm(props) {
             />
             <Text style={styles.txtcrearcuenta}>
                 ¿No tienes cuenta? 
-                <Text style={styles.cuenta}>
+                <Text style={styles.cuenta}
+                onPress={()=> navigation.navigate("Register")}
+                >
+                    {"  "}
                     Crear Cuenta
                 </Text>
             </Text>
@@ -153,7 +172,7 @@ const styles = StyleSheet.create({
     },
     cuenta: {
         color: "#128c7e",
-        fontFamily: "roboto",
+        fontFamily: "Roboto",
         fontSize: 15,
     },
     txto: {
