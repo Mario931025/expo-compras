@@ -2,9 +2,9 @@ import React,{useState} from 'react'
 import { StyleSheet, Text, View ,TouchableOpacity} from 'react-native'
 import { InteractionManager, Input,Button,Divider,Icon } from 'react-native-elements'
 import {useNavigation} from '@react-navigation/native'
+import {validarsesion, cerrarsesion} from '../utils/Acciones';
 import {validateEmail} from '../utils/Utils'
 import { isEmpty } from 'lodash' //devuelve boolean si el valor esta vacio 
-import { validarsesion } from '../utils/Acciones'
 import Loading from './Loading'; //componente que se encarga de traer el cargador de procesos
 import * as firebase from 'firebase';
 
@@ -20,8 +20,7 @@ export default function LoginForm(props) {
     const [show, setshow] = useState(false)
     const [loading, setloading] = useState(false)
 
-
-    validarsesion();
+cerrarsesion(); 
 
     const iniciarsesion = ()=>{
 
@@ -36,6 +35,8 @@ export default function LoginForm(props) {
             .then(()=> {
                 setloading(false)
                 toastRef.current.show("Has iniciado sesiòn correctamente")
+
+                console.log(firebase.auth().currentUser)
             })
 
             .catch((err)=>{
