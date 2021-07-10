@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     },
     cuenta: {
         color: "#128c7e",
-        fontFamily: "Roboto",
+        fontFamily: "Arial",
         fontSize: 15,
     },
     txto: {
